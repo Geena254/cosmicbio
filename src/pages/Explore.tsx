@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search, Filter, Grid3x3, Network } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PublicationCard from "@/components/PublicationCard";
 
 const Explore = () => {
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<"grid" | "graph">("grid");
+  const [selectedSubject, setSelectedSubject] = useState<string>("all");
+
+  useEffect(() => {
+    const subjectParam = searchParams.get("subject");
+    if (subjectParam) {
+      setSelectedSubject(subjectParam);
+    }
+  }, [searchParams]);
 
   // Mock data for demonstration
   const publications = [
@@ -66,6 +76,13 @@ const Explore = () => {
     }
   ];
 
+  // Filter publications based on selected subject
+  const filteredPublications = selectedSubject === "all" 
+    ? publications 
+    : publications.filter(pub => 
+        pub.tags.some(tag => tag.includes(selectedSubject))
+      );
+
   return (
     <div className="min-h-screen pt-24">
       <div className="container mx-auto px-4">
@@ -90,17 +107,18 @@ const Explore = () => {
               </div>
             </div>
             <div className="md:col-span-2">
-              <Select defaultValue="all">
+              <Select value={selectedSubject} onValueChange={setSelectedSubject}>
                 <SelectTrigger>
                   <SelectValue placeholder="Subject" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Subjects</SelectItem>
-                  <SelectItem value="ai">AI & ML</SelectItem>
-                  <SelectItem value="flora">Flora & Fauna</SelectItem>
-                  <SelectItem value="data">Data Management</SelectItem>
-                  <SelectItem value="education">Education</SelectItem>
-                  <SelectItem value="software">Software</SelectItem>
+                  <SelectItem value="AI & Machine Learning">AI & Machine Learning</SelectItem>
+                  <SelectItem value="Flora & Fauna">Flora & Fauna</SelectItem>
+                  <SelectItem value="Data Management">Data Management</SelectItem>
+                  <SelectItem value="Education">Education</SelectItem>
+                  <SelectItem value="Software">Software</SelectItem>
+                  <SelectItem value="Communications">Communications</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -142,7 +160,7 @@ const Explore = () => {
         {/* Results */}
         <div className="mb-4 flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing {publications.length} of 608 publications
+            Showing {filteredPublications.length} of 608 publications
           </p>
           <Select defaultValue="relevance">
             <SelectTrigger className="w-[180px]">
@@ -158,7 +176,7 @@ const Explore = () => {
 
         {viewMode === "grid" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {publications.map((pub) => (
+            {filteredPublications.map((pub) => (
               <PublicationCard key={pub.id} {...pub} />
             ))}
           </div>
