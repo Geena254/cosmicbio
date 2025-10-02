@@ -71,12 +71,10 @@ const Home = () => {
           backgroundPosition: 'center'
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
+        <div className="absolute inset-0 bg-background/60" />
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
-            <span className="text-gradient">NASA Bioscience</span>
-            <br />
-            <span className="text-foreground">Knowledge Explorer</span>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in text-foreground">
+            NASA Bioscience Knowledge Explorer
           </h1>
           <p className="text-xl text-muted-foreground mb-8 animate-fade-in">
             Explore 608 publications spanning decades of biology experiments in space.

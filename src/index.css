@@ -94,8 +94,4 @@ All colors MUST be HSL.
   .hover-lift {
     @apply transition-transform duration-300 hover:scale-105 hover:-translate-y-1;
   }
-  
-  .text-gradient {
-    @apply bg-gradient-to-r from-primary via-cosmic-glow to-accent bg-clip-text text-transparent;
-  }
 }
