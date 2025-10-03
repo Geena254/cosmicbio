@@ -1,12 +1,19 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Download, ExternalLink, Calendar, Users } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Calendar, Users, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
+import KnowledgeGraph from "@/components/KnowledgeGraph";
+import { toast } from "sonner";
 
 const PublicationDetail = () => {
   const { id } = useParams();
+
+  const handleDownloadPDF = () => {
+    toast.success("PDF download started");
+    // In real implementation, would trigger actual PDF download
+  };
 
   // Mock data - would come from API in real implementation
   const publication = {
@@ -27,7 +34,7 @@ const PublicationDetail = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4 max-w-5xl">
         {/* Back button */}
         <Link to="/explore">
@@ -62,7 +69,7 @@ const PublicationDetail = () => {
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <Button className="cosmic-glow">
               <ExternalLink className="h-4 w-4 mr-2" />
               View on NASA OSDR
@@ -70,6 +77,10 @@ const PublicationDetail = () => {
             <Button variant="outline">
               <Download className="h-4 w-4 mr-2" />
               Export Citation
+            </Button>
+            <Button variant="outline" onClick={handleDownloadPDF}>
+              <FileDown className="h-4 w-4 mr-2" />
+              Download PDF
             </Button>
           </div>
         </div>
@@ -128,12 +139,25 @@ const PublicationDetail = () => {
           </TabsContent>
 
           <TabsContent value="related" className="space-y-6">
+            <KnowledgeGraph />
+            
             <Card className="glass-card p-6">
               <h2 className="text-2xl font-semibold mb-4">Related Publications</h2>
-              <p className="text-muted-foreground">
-                Knowledge graph and related publications coming soon. This will show
-                connections between studies, shared methodologies, and complementary findings.
-              </p>
+              <div className="space-y-4">
+                {[
+                  { title: "Microgravity Effects on Arabidopsis Gene Expression", similarity: 87 },
+                  { title: "Plant Growth Systems for Lunar Habitats", similarity: 74 },
+                  { title: "Cell Wall Adaptation in Space Environments", similarity: 69 },
+                ].map((related, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 bg-secondary/50 rounded-lg">
+                    <div>
+                      <h3 className="font-medium">{related.title}</h3>
+                      <p className="text-sm text-muted-foreground">Similarity: {related.similarity}%</p>
+                    </div>
+                    <Button variant="ghost" size="sm">View</Button>
+                  </div>
+                ))}
+              </div>
             </Card>
           </TabsContent>
         </Tabs>

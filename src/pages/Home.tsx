@@ -1,5 +1,5 @@
 import { Brain, Leaf, Database, BookOpen, Code, MessageSquare } from "lucide-react";
-import { FileText, Calendar, TrendingUp, Target } from "lucide-react";
+import { FileText, Calendar, TrendingUp, Target, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SubjectCard from "@/components/SubjectCard";
@@ -81,10 +81,13 @@ const Home = () => {
             Discover insights, connections, and the future of life sciences in exploration.
           </p>
           <div className="flex gap-4 justify-center items-center max-w-2xl mx-auto animate-fade-in">
-            <Input 
-              placeholder="Search publications, topics, organisms..." 
-              className="glass-card border-white/20 h-12"
-            />
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search publications, topics, organisms..." 
+                className="glass-card border-white/20 h-12 pl-10"
+              />
+            </div>
             <Link to="/explore">
               <Button size="lg" className="cosmic-glow h-12 px-8">
                 Explore

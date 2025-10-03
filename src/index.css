@@ -8,7 +8,55 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* NASA-inspired space theme */
+    /* Light theme */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 214 89% 31%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 214 20% 95%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 214 20% 95%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 11 100% 56%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 20% 90%;
+    --input: 214 20% 90%;
+    --ring: 214 89% 31%;
+
+    --radius: 0.75rem;
+    
+    --space-dark: 222 47% 97%;
+    --space-medium: 222 20% 94%;
+    --cosmic-glow: 214 89% 50%;
+    --nebula-purple: 270 60% 50%;
+    --stellar-white: 0 0% 100%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark theme - NASA space theme */
     --background: 222 47% 5%;
     --foreground: 210 40% 98%;
 
@@ -18,7 +66,6 @@ All colors MUST be HSL.
     --popover: 222 44% 8%;
     --popover-foreground: 210 40% 98%;
 
-    /* NASA Blue - primary brand color */
     --primary: 214 89% 31%;
     --primary-foreground: 210 40% 98%;
 
@@ -28,7 +75,6 @@ All colors MUST be HSL.
     --muted: 222 35% 15%;
     --muted-foreground: 215 20% 65%;
 
-    /* NASA Orange accent */
     --accent: 11 100% 56%;
     --accent-foreground: 0 0% 100%;
 
@@ -39,36 +85,17 @@ All colors MUST be HSL.
     --input: 222 35% 15%;
     --ring: 214 89% 31%;
 
-    --radius: 0.75rem;
-    
-    /* Custom NASA theme tokens */
     --space-dark: 222 47% 3%;
     --space-medium: 222 44% 12%;
-    --cosmic-glow: 214 89% 50%;
-    --nebula-purple: 270 60% 50%;
-    --stellar-white: 0 0% 100%;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    /* Same as root since we use dark theme by default */
-    --background: 222 47% 5%;
-    --foreground: 210 40% 98%;
+    --sidebar-background: 222 44% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 214 89% 31%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 222 35% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 222 35% 18%;
+    --sidebar-ring: 214 89% 31%;
   }
 }
 

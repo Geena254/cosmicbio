@@ -31,8 +31,14 @@ const Insights = () => {
     { name: "Yeast", studies: 38 }
   ];
 
+  const impactMetrics = [
+    { category: "Moon Readiness", studies: 234, percentage: 38 },
+    { category: "Mars Readiness", studies: 187, percentage: 31 },
+    { category: "Earth Benefits", studies: 187, percentage: 31 }
+  ];
+
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -154,6 +160,27 @@ const Insights = () => {
             </div>
           </Card>
         </div>
+
+        {/* Impact Metrics */}
+        <Card className="glass-card p-6 mt-8">
+          <h2 className="text-2xl font-semibold mb-6">Mission Impact Distribution</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {impactMetrics.map((metric, index) => (
+              <div key={index} className="text-center p-6 bg-primary/5 rounded-lg border border-primary/10">
+                <div className="text-4xl font-bold text-primary mb-2">{metric.studies}</div>
+                <div className="text-sm text-muted-foreground mb-2">studies</div>
+                <h3 className="font-semibold mb-3">{metric.category}</h3>
+                <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary rounded-full"
+                    style={{ width: `${metric.percentage}%` }}
+                  />
+                </div>
+                <div className="text-xs text-muted-foreground mt-2">{metric.percentage}% of total</div>
+              </div>
+            ))}
+          </div>
+        </Card>
 
         {/* Knowledge Gaps */}
         <Card className="glass-card p-6 mt-8">

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PublicationCard from "@/components/PublicationCard";
+import KnowledgeGraph from "@/components/KnowledgeGraph";
 
 const Explore = () => {
   const [searchParams] = useSearchParams();
@@ -18,6 +19,9 @@ const Explore = () => {
     }
   }, [searchParams]);
 
+  const [selectedMission, setSelectedMission] = useState<string>("all");
+  const [selectedImpact, setSelectedImpact] = useState<string>("all");
+
   // Mock data for demonstration
   const publications = [
     {
@@ -27,7 +31,9 @@ const Explore = () => {
       year: 2023,
       authors: ["Smith, J.", "Johnson, M.", "Williams, K."],
       tags: ["Flora & Fauna", "Microgravity", "Cell Biology"],
-      source: "NASA OSDR"
+      source: "NASA OSDR",
+      mission: "ISS",
+      impact: "Moon"
     },
     {
       id: "2",
@@ -36,7 +42,9 @@ const Explore = () => {
       year: 2024,
       authors: ["Chen, L.", "Rodriguez, A."],
       tags: ["AI & Machine Learning", "Health", "ISS"],
-      source: "NASA Task Book"
+      source: "NASA Task Book",
+      mission: "ISS",
+      impact: "Mars"
     },
     {
       id: "3",
@@ -45,7 +53,9 @@ const Explore = () => {
       year: 2022,
       authors: ["Brown, T.", "Davis, R.", "Martinez, E.", "Lee, S."],
       tags: ["Flora & Fauna", "Radiation", "Genetics"],
-      source: "Life Sciences Library"
+      source: "Life Sciences Library",
+      mission: "ISS",
+      impact: "Mars"
     },
     {
       id: "4",
@@ -54,7 +64,9 @@ const Explore = () => {
       year: 2023,
       authors: ["Anderson, P.", "White, J."],
       tags: ["Data Management", "Software", "Integration"],
-      source: "NASA OSDR"
+      source: "NASA OSDR",
+      mission: "Shuttle",
+      impact: "Earth"
     },
     {
       id: "5",
@@ -63,7 +75,9 @@ const Explore = () => {
       year: 2024,
       authors: ["Taylor, M."],
       tags: ["Education", "Outreach"],
-      source: "Life Sciences Library"
+      source: "Life Sciences Library",
+      mission: "Apollo",
+      impact: "Earth"
     },
     {
       id: "6",
@@ -72,19 +86,22 @@ const Explore = () => {
       year: 2023,
       authors: ["Zhang, H.", "Kumar, R.", "O'Brien, K."],
       tags: ["AI & Machine Learning", "Software", "Imaging"],
-      source: "NASA Task Book"
+      source: "NASA Task Book",
+      mission: "ISS",
+      impact: "Moon"
     }
   ];
 
-  // Filter publications based on selected subject
-  const filteredPublications = selectedSubject === "all" 
-    ? publications 
-    : publications.filter(pub => 
-        pub.tags.some(tag => tag.includes(selectedSubject))
-      );
+  // Filter publications based on all criteria
+  const filteredPublications = publications.filter(pub => {
+    const subjectMatch = selectedSubject === "all" || pub.tags.some(tag => tag.includes(selectedSubject));
+    const missionMatch = selectedMission === "all" || pub.mission === selectedMission;
+    const impactMatch = selectedImpact === "all" || pub.impact === selectedImpact;
+    return subjectMatch && missionMatch && impactMatch;
+  });
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -96,38 +113,63 @@ const Explore = () => {
 
         {/* Search and Filters */}
         <div className="glass-card p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-            <div className="md:col-span-6">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Search by title, keywords, or topics..." 
-                  className="pl-10"
-                />
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              <div className="md:col-span-12">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Search by title, keywords, or topics..." 
+                    className="pl-10"
+                  />
+                </div>
               </div>
             </div>
-            <div className="md:col-span-2">
+            
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
               <Select value={selectedSubject} onValueChange={setSelectedSubject}>
                 <SelectTrigger>
                   <SelectValue placeholder="Subject" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-popover z-50">
                   <SelectItem value="all">All Subjects</SelectItem>
-                  <SelectItem value="AI & Machine Learning">AI & Machine Learning</SelectItem>
+                  <SelectItem value="AI & Machine Learning">AI & ML</SelectItem>
                   <SelectItem value="Flora & Fauna">Flora & Fauna</SelectItem>
-                  <SelectItem value="Data Management">Data Management</SelectItem>
+                  <SelectItem value="Data Management">Data Mgmt</SelectItem>
                   <SelectItem value="Education">Education</SelectItem>
                   <SelectItem value="Software">Software</SelectItem>
-                  <SelectItem value="Communications">Communications</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            <div className="md:col-span-2">
+
+              <Select value={selectedMission} onValueChange={setSelectedMission}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Mission" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover z-50">
+                  <SelectItem value="all">All Missions</SelectItem>
+                  <SelectItem value="ISS">ISS</SelectItem>
+                  <SelectItem value="Shuttle">Shuttle</SelectItem>
+                  <SelectItem value="Apollo">Apollo</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={selectedImpact} onValueChange={setSelectedImpact}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Impact" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover z-50">
+                  <SelectItem value="all">All Impact</SelectItem>
+                  <SelectItem value="Moon">Moon Ready</SelectItem>
+                  <SelectItem value="Mars">Mars Ready</SelectItem>
+                  <SelectItem value="Earth">Earth Benefit</SelectItem>
+                </SelectContent>
+              </Select>
+
               <Select defaultValue="all">
                 <SelectTrigger>
                   <SelectValue placeholder="Year" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-popover z-50">
                   <SelectItem value="all">All Years</SelectItem>
                   <SelectItem value="2024">2024</SelectItem>
                   <SelectItem value="2023">2023</SelectItem>
@@ -135,24 +177,25 @@ const Explore = () => {
                   <SelectItem value="older">Older</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            <div className="md:col-span-2 flex gap-2">
-              <Button 
-                variant={viewMode === "grid" ? "default" : "outline"}
-                size="icon"
-                onClick={() => setViewMode("grid")}
-                className="flex-1"
-              >
-                <Grid3x3 className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant={viewMode === "graph" ? "default" : "outline"}
-                size="icon"
-                onClick={() => setViewMode("graph")}
-                className="flex-1"
-              >
-                <Network className="h-4 w-4" />
-              </Button>
+              
+              <div className="col-span-2 flex gap-2">
+                <Button 
+                  variant={viewMode === "grid" ? "default" : "outline"}
+                  size="icon"
+                  onClick={() => setViewMode("grid")}
+                  className="flex-1"
+                >
+                  <Grid3x3 className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant={viewMode === "graph" ? "default" : "outline"}
+                  size="icon"
+                  onClick={() => setViewMode("graph")}
+                  className="flex-1"
+                >
+                  <Network className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -181,13 +224,9 @@ const Explore = () => {
             ))}
           </div>
         ) : (
-          <div className="glass-card p-8 min-h-[600px] flex items-center justify-center">
-            <div className="text-center">
-              <Network className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Knowledge Graph View</h3>
-              <p className="text-muted-foreground mb-4">
-                Interactive knowledge graph visualization coming soon
-              </p>
+          <div>
+            <KnowledgeGraph />
+            <div className="mt-6 flex justify-center">
               <Button onClick={() => setViewMode("grid")} variant="outline">
                 Return to Grid View
               </Button>
