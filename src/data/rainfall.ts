@@ -49,7 +49,7 @@ export const COUNTY_RAINFALL: CountyRainfall[] = [
   { name: "Nyandarua", lat: -0.18, lng: 36.48, zone: "Central highlands (bimodal)", annual: 1266, monthly: [42, 47, 116, 242, 189, 47, 32, 37, 42, 158, 220, 94] },
   { name: "Nyeri", lat: -0.42, lng: 36.947, zone: "Central highlands (bimodal)", annual: 1205, monthly: [40, 45, 110, 230, 180, 45, 30, 35, 40, 150, 210, 90] },
   { name: "Kirinyaga", lat: -0.499, lng: 37.283, zone: "Central highlands (bimodal)", annual: 1266, monthly: [42, 47, 116, 242, 189, 47, 32, 37, 42, 158, 220, 94] },
-  { name: "Murang"a", lat: -0.784, lng: 37.04, zone: "Central highlands (bimodal)", annual: 1205, monthly: [40, 45, 110, 230, 180, 45, 30, 35, 40, 150, 210, 90] },
+  { name: "Murang'a", lat: -0.784, lng: 37.04, zone: "Central highlands (bimodal)", annual: 1205, monthly: [40, 45, 110, 230, 180, 45, 30, 35, 40, 150, 210, 90] },
   { name: "Kiambu", lat: -1.171, lng: 36.83, zone: "Central highlands (bimodal)", annual: 1144, monthly: [38, 43, 104, 218, 171, 43, 28, 33, 38, 142, 200, 86] },
   { name: "Turkana", lat: 3.117, lng: 35.597, zone: "Arid north (very low, erratic)", annual: 290, monthly: [8, 8, 26, 68, 42, 8, 8, 8, 8, 34, 51, 21] },
   { name: "West Pokot", lat: 1.4, lng: 35.2, zone: "Rift Valley highlands (long season)", annual: 991, monthly: [26, 38, 68, 119, 136, 110, 128, 136, 94, 68, 42, 26] },
