@@ -281,7 +281,19 @@ const Agriculture = () => {
 
             {hubResult && (
               <Card className="glass-card p-6">
-                <h2 className="mb-4 text-2xl font-semibold">{hubCrop}</h2>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-2xl font-semibold">{hubCrop}</h2>
+                  <DownloadReportButton
+                    kicker="Kenya crop guide"
+                    title={`${hubCrop} — Kenya crop guide`}
+                    fileName={`${hubCrop}-kenya-crop-guide`}
+                    facts={[
+                      { label: "Crop", value: hubCrop },
+                      { label: "Region", value: "Kenya" },
+                    ]}
+                    body={hubResult}
+                  />
+                </div>
                 <AdviceOutput text={hubResult} />
               </Card>
             )}
