@@ -337,7 +337,16 @@ const Agriculture = () => {
 
             {ceResult && (
               <Card className="glass-card p-6">
-                <h2 className="mb-4 text-2xl font-semibold">{ceTopic}</h2>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-2xl font-semibold">{ceTopic}</h2>
+                  <DownloadReportButton
+                    kicker="Protected growing guide"
+                    title={ceTopic}
+                    fileName={ceTopic}
+                    facts={[{ label: "Topic", value: ceTopic }]}
+                    body={ceResult}
+                  />
+                </div>
                 <AdviceOutput text={ceResult} />
               </Card>
             )}

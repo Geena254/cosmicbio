@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Download, ExternalLink, Calendar, Users, FileDown, Sprout, Loader2 } from "lucide-react";
 import AdviceOutput from "@/components/AdviceOutput";
+import DownloadReportButton from "@/components/DownloadReportButton";
 import { askAdvisor } from "@/lib/advisor";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -138,7 +139,17 @@ const PublicationDetail = () => {
                 )}
               </Button>
               {earthText && (
-                <div className="mt-6">
+                <div className="mt-6 space-y-4">
+                  <DownloadReportButton
+                    kicker="Earth applications report"
+                    title={publication.title}
+                    fileName={`earth-applications-${publication.title}`}
+                    facts={[
+                      { label: "Source", value: publication.source },
+                      { label: "Year", value: String(publication.year) },
+                    ]}
+                    body={earthText}
+                  />
                   <AdviceOutput text={earthText} />
                 </div>
               )}
