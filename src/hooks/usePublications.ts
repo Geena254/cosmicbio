@@ -142,3 +142,21 @@ export function useDailyStudy() {
     },
   });
 }
+
+export function useSubjectCounts(subjects: string[]) {
+  return useQuery({
+    queryKey: ["subject-counts", subjects],
+    queryFn: async () => {
+      const entries = await Promise.all(
+        subjects.map(async (s) => {
+          const { count } = await supabase
+            .from("publications")
+            .select("*", { count: "exact", head: true })
+            .eq("subject", s);
+          return [s, count ?? 0] as const;
+        }),
+      );
+      return Object.fromEntries(entries) as Record<string, number>;
+    },
+  });
+}
