@@ -12,8 +12,6 @@ import Insights from "./pages/Insights";
 import Agriculture from "./pages/Agriculture";
 import Rainfall from "./pages/Rainfall";
 import About from "./pages/About";
-import Ask from "./pages/Ask";
-import Story from "./pages/Story";
 import WhatsNew from "./pages/WhatsNew";
 import NotFound from "./pages/NotFound";
 import Footer from "./components/Footer";
@@ -34,8 +32,6 @@ const App = () => (
                 <Route path="/" element={<Home />} />
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/publication/:id" element={<PublicationDetail />} />
-                <Route path="/ask" element={<Ask />} />
-                <Route path="/story" element={<Story />} />
                 <Route path="/whats-new" element={<WhatsNew />} />
                 <Route path="/insights" element={<Insights />} />
                 <Route path="/agriculture" element={<Agriculture />} />

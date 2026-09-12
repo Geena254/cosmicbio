@@ -7,8 +7,6 @@ import {
   Menu,
   Sprout,
   CloudRain,
-  Sparkles,
-  BookOpenCheck,
   BellRing,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
@@ -20,8 +18,6 @@ import ThemeToggle from "./ThemeToggle";
 const navItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/explore", label: "Explore", icon: Search },
-  { path: "/ask", label: "Ask", icon: Sparkles },
-  { path: "/story", label: "Tour", icon: BookOpenCheck },
   { path: "/whats-new", label: "New", icon: BellRing },
   { path: "/insights", label: "Insights", icon: BarChart3 },
   { path: "/agriculture", label: "Agriculture", icon: Sprout },

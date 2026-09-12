@@ -1,10 +1,18 @@
-import { useEffect, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { ReactNode, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Sparkles, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import AdviceOutput from "@/components/AdviceOutput";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -19,17 +27,18 @@ const EXAMPLES = [
   "How does radiation change gene expression?",
 ];
 
-const Ask = () => {
-  const [searchParams] = useSearchParams();
+type Props = { children: ReactNode; initialQuestion?: string };
+
+const AskDialog = ({ children, initialQuestion }: Props) => {
+  const [open, setOpen] = useState(false);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState("");
   const [sources, setSources] = useState<Source[]>([]);
 
   useEffect(() => {
-    const q = searchParams.get("q");
-    if (q) setQuestion(q);
-  }, [searchParams]);
+    if (open && initialQuestion) setQuestion(initialQuestion);
+  }, [open, initialQuestion]);
 
   const ask = async (text?: string) => {
     const q = (text ?? question).trim();
@@ -56,20 +65,21 @@ const Ask = () => {
   };
 
   return (
-    <div className="min-h-screen py-10">
-      <div className="container mx-auto max-w-4xl px-4">
-        <header className="mb-8">
-          <Badge variant="secondary" className="mb-3">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="max-h-[85vh] max-w-3xl overflow-y-auto">
+        <DialogHeader>
+          <Badge variant="secondary" className="mb-2 w-fit">
             <Sparkles className="mr-1 h-3 w-3" /> Answers with citations
           </Badge>
-          <h1 className="mb-3 text-4xl font-bold">Ask the research</h1>
-          <p className="text-muted-foreground">
+          <DialogTitle className="text-3xl">Ask the research</DialogTitle>
+          <DialogDescription>
             Ask a question in plain language. The answer is built only from the NASA studies in this
             library, and every claim points back to the studies it came from.
-          </p>
-        </header>
+          </DialogDescription>
+        </DialogHeader>
 
-        <Card className="glass-card space-y-4 p-6">
+        <div className="space-y-4">
           <form
             className="flex flex-col gap-3 sm:flex-row"
             onSubmit={(e) => {
@@ -95,52 +105,56 @@ const Ask = () => {
               </Button>
             ))}
           </div>
-        </Card>
 
-        {loading && (
-          <p className="mt-8 flex items-center gap-2 text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Reading the studies...
-          </p>
-        )}
+          {loading && (
+            <p className="flex items-center gap-2 text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" /> Reading the studies...
+            </p>
+          )}
 
-        {answer && (
-          <Card className="glass-card mt-8 p-6">
-            <AdviceOutput text={answer} />
-          </Card>
-        )}
+          {answer && (
+            <Card className="glass-card p-6">
+              <AdviceOutput text={answer} />
+            </Card>
+          )}
 
-        {sources.length > 0 && (
-          <Card className="glass-card mt-6 p-6">
-            <h2 className="mb-4 text-xl font-semibold">Studies used</h2>
-            <ol className="space-y-3">
-              {sources.map((s) => (
-                <li key={s.id} className="flex gap-3 text-sm">
-                  <span className="font-bold text-primary">[{s.n}]</span>
-                  <span className="flex-1">
-                    <Link to={`/publication/${s.id}`} className="hover:text-primary">
-                      {s.title}
-                    </Link>{" "}
-                    <span className="text-muted-foreground">{s.year ?? ""}</span>
-                    {s.url && (
-                      <a
-                        href={s.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="ml-2 inline-flex items-center text-muted-foreground hover:text-primary"
-                        aria-label="Open the original study"
+          {sources.length > 0 && (
+            <Card className="glass-card p-6">
+              <h2 className="mb-4 text-xl font-semibold">Studies used</h2>
+              <ol className="space-y-3">
+                {sources.map((s) => (
+                  <li key={s.id} className="flex gap-3 text-sm">
+                    <span className="font-bold text-primary">[{s.n}]</span>
+                    <span className="flex-1">
+                      <Link
+                        to={`/publication/${s.id}`}
+                        onClick={() => setOpen(false)}
+                        className="hover:text-primary"
                       >
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    )}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </Card>
-        )}
-      </div>
-    </div>
+                        {s.title}
+                      </Link>{" "}
+                      <span className="text-muted-foreground">{s.year ?? ""}</span>
+                      {s.url && (
+                        <a
+                          href={s.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="ml-2 inline-flex items-center text-muted-foreground hover:text-primary"
+                          aria-label="Open the original study"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </Card>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default Ask;
+export default AskDialog;
