@@ -19,6 +19,18 @@ export type Publication = {
   first_seen_at: string;
 };
 
+/** Some source abstracts arrive with inline HTML markup. */
+export function cleanText(text?: string | null): string | null {
+  if (!text) return null;
+  return text
+    .replace(/<\/(h\d|p|div|li)>/gi, " ")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export type PublicationFilters = {
   search?: string;
   subject?: string;
@@ -70,7 +82,11 @@ export function usePublications(filters: PublicationFilters) {
 
       const { data, error, count } = await query;
       if (error) throw error;
-      return { rows: (data ?? []) as Publication[], total: count ?? 0 };
+      const rows = ((data ?? []) as Publication[]).map((r) => ({
+        ...r,
+        abstract: cleanText(r.abstract),
+      }));
+      return { rows, total: count ?? 0 };
     },
   });
 }
@@ -86,7 +102,9 @@ export function usePublication(id?: string) {
         .eq("id", id!)
         .maybeSingle();
       if (error) throw error;
-      return data as Publication | null;
+      if (!data) return null;
+      const row = data as Publication;
+      return { ...row, abstract: cleanText(row.abstract) } as Publication;
     },
   });
 }
@@ -138,7 +156,8 @@ export function useDailyStudy() {
         .order("external_id", { ascending: true })
         .range(offset, offset);
 
-      return (data?.[0] as Publication) ?? null;
+      const row = (data?.[0] as Publication) ?? null;
+      return row ? ({ ...row, abstract: cleanText(row.abstract) } as Publication) : null;
     },
   });
 }
