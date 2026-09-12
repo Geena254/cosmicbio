@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Download, ExternalLink, Calendar, Users, FileDown } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Calendar, Users, FileDown, Sprout, Loader2 } from "lucide-react";
+import AdviceOutput from "@/components/AdviceOutput";
+import { askAdvisor } from "@/lib/advisor";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +12,8 @@ import { toast } from "sonner";
 
 const PublicationDetail = () => {
   const { id } = useParams();
+  const [earthLoading, setEarthLoading] = useState(false);
+  const [earthText, setEarthText] = useState("");
 
   const handleDownloadPDF = () => {
     toast.success("PDF download started");
@@ -31,6 +36,23 @@ const PublicationDetail = () => {
       "Recovery mechanisms were observed when plants adapted to microgravity"
     ],
     impact: "This research provides crucial insights for developing sustainable plant growth systems for long-duration space missions. Understanding cell wall development in microgravity is essential for food production on Moon and Mars bases."
+  };
+
+  const loadEarthApplication = async () => {
+    setEarthLoading(true);
+    setEarthText("");
+    try {
+      const text = await askAdvisor("earth-application", {
+        title: publication.title,
+        abstract: publication.abstract,
+        findings: publication.keyFindings,
+      });
+      setEarthText(text);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setEarthLoading(false);
+    }
   };
 
   return (
@@ -91,7 +113,37 @@ const PublicationDetail = () => {
             <TabsTrigger value="summary">Summary</TabsTrigger>
             <TabsTrigger value="impact">Mission Impact</TabsTrigger>
             <TabsTrigger value="related">Related Studies</TabsTrigger>
+            <TabsTrigger value="earth">Earth Applications</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="earth" className="space-y-6">
+            <Card className="glass-card p-6">
+              <h2 className="text-2xl font-semibold mb-2">What this means for farming on Earth</h2>
+              <p className="text-muted-foreground mb-4">
+                Translate this study into practical guidance for farmers, with a focus on Kenya.
+              </p>
+              <Button
+                className="cosmic-glow"
+                disabled={earthLoading}
+                onClick={loadEarthApplication}
+              >
+                {earthLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Working it out
+                  </>
+                ) : (
+                  <>
+                    <Sprout className="h-4 w-4 mr-2" /> Show farming applications
+                  </>
+                )}
+              </Button>
+              {earthText && (
+                <div className="mt-6">
+                  <AdviceOutput text={earthText} />
+                </div>
+              )}
+            </Card>
+          </TabsContent>
 
           <TabsContent value="summary" className="space-y-6">
             <Card className="glass-card p-6">
