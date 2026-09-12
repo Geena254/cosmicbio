@@ -1,73 +1,156 @@
-# Welcome to your Lovable project
+# cosmicbio
 
-## Project info
+Project Title:
+NASA Bioscience Knowledge Explorer
 
-**URL**: https://lovable.dev/projects/d7a7334f-438c-459d-a26f-9d733ef127fd
+Project Summary:
+Build a modern, interactive frontend for a dynamic dashboard that summarizes 608 NASA bioscience publications and enables users to explore the results of decades of biology experiments in space. The dashboard should allow users to search, filter, and visualize insights using AI-powered summaries and knowledge graphs. The target audience includes scientists, NASA managers, mission planners, and educators.
 
-## How can I edit this code?
+Key Objectives:
 
-There are several ways of editing your application.
+Provide an intuitive search and filter system across NASA bioscience publications.
 
-**Use Lovable**
+Enable AI-powered summaries of each paper, focusing on Results and Conclusions.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d7a7334f-438c-459d-a26f-9d733ef127fd) and start prompting.
+Present a knowledge graph linking related experiments, outcomes, and topics.
 
-Changes made via Lovable will be committed automatically to this repo.
+Highlight research progress, gaps, and actionable insights for exploration missions.
 
-**Use your preferred IDE**
+Integrate metadata and links from NASA OSDR, NASA Life Sciences Library, and NASA Task Book.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Subjects / Content Categories:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Artificial Intelligence & Machine Learning
 
-Follow these steps:
+Data Management
+
+Education
+
+Flora & Fauna
+
+Software
+
+Writing & Communications
+
+Core Features (Frontend):
+
+Homepage / Dashboard Overview
+
+Hero section with NASA theme (Moon/Mars background).
+
+Quick access tiles for subject areas (AI, Flora & Fauna, etc.).
+
+Search bar with natural language query support.
+
+Key metrics (e.g., # of studies, years covered, knowledge gaps identified).
+
+Search & Explore Page
+
+Full-text search and filters (by subject, year, organism studied, mission type, experiment type).
+
+Toggle between list view (summaries) and graph view (knowledge graph).
+
+Each result card should display:
+
+Title
+
+Key findings (AI-generated summary)
+
+Tags (subject, species, system studied)
+
+Link to NASA resource.
+
+Publication Detail Page
+
+Title, authors, year, source link (OSDR, Task Book, Life Sciences Library).
+
+Tabs for:
+
+Summary (AI condensed results & conclusions)
+
+Knowledge Graph (related studies, impacts, citations).
+
+Impact on Human Spaceflight (AI-generated insights for Moon/Mars missions).
+
+Download button for citation & export.
+
+Visualization / Knowledge Graph
+
+Interactive graph linking experiments, organisms, outcomes, and related fields.
+
+Nodes clickable to drill down into related publications.
+
+Highlight clusters of research and gaps (where few studies exist).
+
+Insights Page
+
+Dynamic summaries of scientific progress, knowledge gaps, and future directions.
+
+Charts/graphs: publication trends over time, most studied organisms, etc.
+
+Export options for reports.
+
+UI/UX Guidelines:
+
+Futuristic but clean NASA-inspired theme (space/galaxy background, blues, whites, accents of orange).
+
+Responsive design (desktop, tablet, mobile).
+
+Accessibility-friendly (WCAG 2.1 AA compliance).
+
+Use Material UI or Tailwind CSS for consistency.
+
+Smooth animations for transitions (graphs, cards, filters).
+
+Dashboard layout: collapsible sidebar for filters, main content area for results/graphs.
+
+Integration Points (Frontend should be ready for):
+
+AI summarization API (backend will handle text mining + summarization).
+
+Knowledge graph API (backend will expose JSON for graph rendering).
+
+NASA OSDR / Task Book / Library API endpoints.
+
+Technical Notes:
+
+Use React + Next.js (or standard React).
+
+State management with Redux or Zustand.
+
+Graph visualization with D3.js or Cytoscape.js.
+
+Charts with Recharts or Chart.js.
+
+Modular, reusable components for cards, filters, graphs.
+
+Style Inspiration:
+
+NASA’s Artemis mission branding (dark blue + white, futuristic UI).
+
+Microsoft PowerBI dashboards (clean panels & filters).
+
+Modern scientific dashboards (knowledge exploration vibe).
+
+This project was built with [Lovable](https://lovable.dev).
+
+**Live app**: https://cosmicbio.lovable.app
+
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/d7a7334f-438c-459d-a26f-9d733ef127fd).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+git clone <this-repository-url>
+cd <repository-name>
 npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/d7a7334f-438c-459d-a26f-9d733ef127fd) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
