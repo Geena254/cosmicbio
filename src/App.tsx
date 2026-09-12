@@ -14,6 +14,7 @@ import Rainfall from "./pages/Rainfall";
 import About from "./pages/About";
 import Ask from "./pages/Ask";
 import Story from "./pages/Story";
+import WhatsNew from "./pages/WhatsNew";
 import NotFound from "./pages/NotFound";
 import Footer from "./components/Footer";
 
