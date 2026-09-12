@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import PublicationDetail from "./pages/PublicationDetail";
 import Insights from "./pages/Insights";
+import Agriculture from "./pages/Agriculture";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import Footer from "./components/Footer";
@@ -30,6 +31,7 @@ const App = () => (
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/publication/:id" element={<PublicationDetail />} />
                 <Route path="/insights" element={<Insights />} />
+                <Route path="/agriculture" element={<Agriculture />} />
                 <Route path="/about" element={<About />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
