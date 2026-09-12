@@ -19,6 +19,8 @@ import ThemeToggle from "./ThemeToggle";
 const navItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/explore", label: "Explore", icon: Search },
+  { path: "/ask", label: "Ask", icon: Sparkles },
+  { path: "/story", label: "Tour", icon: BookOpenCheck },
   { path: "/insights", label: "Insights", icon: BarChart3 },
   { path: "/agriculture", label: "Agriculture", icon: Sprout },
   { path: "/rainfall", label: "Rainfall", icon: CloudRain },
