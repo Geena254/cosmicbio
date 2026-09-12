@@ -22,6 +22,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import SubjectCard from "@/components/SubjectCard";
 import MetricCard from "@/components/MetricCard";
+import AskDialog from "@/components/AskDialog";
+import StoryDialog from "@/components/StoryDialog";
 import { Link, useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-space.jpg";
 import { useDailyStudy, useLibraryStats, useSubjectCounts } from "@/hooks/usePublications";
@@ -140,16 +142,16 @@ const Home = () => {
             </Button>
           </form>
           <div className="mt-4 flex animate-fade-in flex-wrap justify-center gap-3">
-            <Link to="/ask">
+            <AskDialog>
               <Button variant="outline" size="sm">
                 <Sparkles className="mr-2 h-4 w-4" /> Ask the research
               </Button>
-            </Link>
-            <Link to="/story">
+            </AskDialog>
+            <StoryDialog>
               <Button variant="outline" size="sm">
                 <BookOpenCheck className="mr-2 h-4 w-4" /> Take the 5-minute tour
               </Button>
-            </Link>
+            </StoryDialog>
           </div>
         </div>
       </section>

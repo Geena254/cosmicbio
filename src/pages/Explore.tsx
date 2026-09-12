@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import PublicationCard from "@/components/PublicationCard";
 import KnowledgeGraph from "@/components/KnowledgeGraph";
+import AskDialog from "@/components/AskDialog";
 import { usePublications } from "@/hooks/usePublications";
 
 const SUBJECTS = [
@@ -211,11 +212,11 @@ const Explore = () => {
             {isLoading ? "Searching..." : `${total.toLocaleString()} publications found`}
           </p>
           <div className="flex items-center gap-2">
-            <Link to={`/ask${search ? `?q=${encodeURIComponent(search)}` : ""}`}>
+            <AskDialog initialQuestion={search}>
               <Button variant="outline" size="sm">
                 <Sparkles className="mr-2 h-4 w-4" /> Ask the research
               </Button>
-            </Link>
+            </AskDialog>
             <Select value={sort} onValueChange={(v) => setSort(v as typeof sort)}>
               <SelectTrigger className="w-[170px]">
                 <SelectValue />
