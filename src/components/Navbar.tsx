@@ -7,8 +7,6 @@ import {
   Menu,
   Sprout,
   CloudRain,
-  Sparkles,
-  BookOpenCheck,
   BellRing,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
