@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import AdviceOutput from "@/components/AdviceOutput";
+import DownloadReportButton from "@/components/DownloadReportButton";
 import { askAdvisor } from "@/lib/advisor";
 import { toast } from "sonner";
 
@@ -221,9 +222,24 @@ const Agriculture = () => {
 
             {plantingResult && (
               <Card className="glass-card p-6">
-                <h2 className="mb-4 text-2xl font-semibold">
-                  {crop} in {location}
-                </h2>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-2xl font-semibold">
+                    {crop} in {location}
+                  </h2>
+                  <DownloadReportButton
+                    kicker="Planting advisor report"
+                    title={`${crop} planting plan — ${location}`}
+                    fileName={`${crop}-${location}-planting-plan`}
+                    facts={[
+                      { label: "Crop", value: crop },
+                      { label: "Area", value: location },
+                      { label: "Season", value: season },
+                      { label: "Setup", value: setup },
+                      { label: "Land size", value: area || "Not specified" },
+                    ]}
+                    body={plantingResult}
+                  />
+                </div>
                 <AdviceOutput text={plantingResult} />
               </Card>
             )}
@@ -265,7 +281,19 @@ const Agriculture = () => {
 
             {hubResult && (
               <Card className="glass-card p-6">
-                <h2 className="mb-4 text-2xl font-semibold">{hubCrop}</h2>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-2xl font-semibold">{hubCrop}</h2>
+                  <DownloadReportButton
+                    kicker="Kenya crop guide"
+                    title={`${hubCrop} — Kenya crop guide`}
+                    fileName={`${hubCrop}-kenya-crop-guide`}
+                    facts={[
+                      { label: "Crop", value: hubCrop },
+                      { label: "Region", value: "Kenya" },
+                    ]}
+                    body={hubResult}
+                  />
+                </div>
                 <AdviceOutput text={hubResult} />
               </Card>
             )}
@@ -309,7 +337,16 @@ const Agriculture = () => {
 
             {ceResult && (
               <Card className="glass-card p-6">
-                <h2 className="mb-4 text-2xl font-semibold">{ceTopic}</h2>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-2xl font-semibold">{ceTopic}</h2>
+                  <DownloadReportButton
+                    kicker="Protected growing guide"
+                    title={ceTopic}
+                    fileName={ceTopic}
+                    facts={[{ label: "Topic", value: ceTopic }]}
+                    body={ceResult}
+                  />
+                </div>
                 <AdviceOutput text={ceResult} />
               </Card>
             )}

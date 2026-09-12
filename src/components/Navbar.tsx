@@ -1,4 +1,4 @@
-import { Home, Search, BarChart3, Info, Rocket, Menu, Sprout } from "lucide-react";
+import { Home, Search, BarChart3, Info, Rocket, Menu, Sprout, CloudRain } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ const navItems = [
   { path: "/explore", label: "Explore", icon: Search },
   { path: "/insights", label: "Insights", icon: BarChart3 },
   { path: "/agriculture", label: "Agriculture", icon: Sprout },
+  { path: "/rainfall", label: "Rainfall", icon: CloudRain },
   { path: "/about", label: "About", icon: Info },
 ];
 
