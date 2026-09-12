@@ -9,6 +9,7 @@ import {
   CloudRain,
   Sparkles,
   BookOpenCheck,
+  BellRing,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -21,6 +22,7 @@ const navItems = [
   { path: "/explore", label: "Explore", icon: Search },
   { path: "/ask", label: "Ask", icon: Sparkles },
   { path: "/story", label: "Tour", icon: BookOpenCheck },
+  { path: "/whats-new", label: "New", icon: BellRing },
   { path: "/insights", label: "Insights", icon: BarChart3 },
   { path: "/agriculture", label: "Agriculture", icon: Sprout },
   { path: "/rainfall", label: "Rainfall", icon: CloudRain },
