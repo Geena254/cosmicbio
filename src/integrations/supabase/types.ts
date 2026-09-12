@@ -14,7 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      publications: {
+        Row: {
+          abstract: string | null
+          authors: string[]
+          created_at: string
+          external_id: string
+          first_seen_at: string
+          id: string
+          impact: string | null
+          key_findings: string[]
+          mission: string | null
+          organism: string | null
+          source: string
+          source_url: string | null
+          subject: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          year: number | null
+        }
+        Insert: {
+          abstract?: string | null
+          authors?: string[]
+          created_at?: string
+          external_id: string
+          first_seen_at?: string
+          id?: string
+          impact?: string | null
+          key_findings?: string[]
+          mission?: string | null
+          organism?: string | null
+          source: string
+          source_url?: string | null
+          subject?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          year?: number | null
+        }
+        Update: {
+          abstract?: string | null
+          authors?: string[]
+          created_at?: string
+          external_id?: string
+          first_seen_at?: string
+          id?: string
+          impact?: string | null
+          key_findings?: string[]
+          mission?: string | null
+          organism?: string | null
+          source?: string
+          source_url?: string | null
+          subject?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          year?: number | null
+        }
+        Relationships: []
+      }
+      sync_runs: {
+        Row: {
+          created_at: string
+          found: number
+          id: string
+          inserted: number
+          message: string | null
+          source: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          found?: number
+          id?: string
+          inserted?: number
+          message?: string | null
+          source: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          found?: number
+          id?: string
+          inserted?: number
+          message?: string | null
+          source?: string
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

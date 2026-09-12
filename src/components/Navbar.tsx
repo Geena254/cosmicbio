@@ -1,4 +1,15 @@
-import { Home, Search, BarChart3, Info, Rocket, Menu, Sprout, CloudRain } from "lucide-react";
+import {
+  Home,
+  Search,
+  BarChart3,
+  Info,
+  Rocket,
+  Menu,
+  Sprout,
+  CloudRain,
+  Sparkles,
+  BookOpenCheck,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -8,6 +19,8 @@ import ThemeToggle from "./ThemeToggle";
 const navItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/explore", label: "Explore", icon: Search },
+  { path: "/ask", label: "Ask", icon: Sparkles },
+  { path: "/story", label: "Tour", icon: BookOpenCheck },
   { path: "/insights", label: "Insights", icon: BarChart3 },
   { path: "/agriculture", label: "Agriculture", icon: Sprout },
   { path: "/rainfall", label: "Rainfall", icon: CloudRain },
