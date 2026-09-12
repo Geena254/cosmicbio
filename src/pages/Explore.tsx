@@ -1,247 +1,289 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Search, Filter, Grid3x3, Network } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import { Search, Grid3x3, Network, Loader2, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import PublicationCard from "@/components/PublicationCard";
 import KnowledgeGraph from "@/components/KnowledgeGraph";
+import { usePublications } from "@/hooks/usePublications";
+
+const SUBJECTS = [
+  "Flora & Fauna",
+  "AI & Machine Learning",
+  "Data Management",
+  "Education",
+  "Software",
+  "Writing & Communications",
+];
+const MISSIONS = ["ISS", "Shuttle", "Apollo", "Ground / Analog", "Other"];
+const IMPACTS = ["Moon", "Mars", "Earth"];
+const PAGE_SIZE = 12;
 
 const Explore = () => {
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<"grid" | "graph">("grid");
-  const [selectedSubject, setSelectedSubject] = useState<string>("all");
+  const [subject, setSubject] = useState("all");
+  const [mission, setMission] = useState("all");
+  const [impact, setImpact] = useState("all");
+  const [year, setYear] = useState("all");
+  const [sort, setSort] = useState<"recent" | "oldest" | "title">("recent");
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const subjectParam = searchParams.get("subject");
-    if (subjectParam) {
-      setSelectedSubject(subjectParam);
+    if (subjectParam) setSubject(subjectParam);
+    const q = searchParams.get("q");
+    if (q) {
+      setSearchInput(q);
+      setSearch(q);
     }
   }, [searchParams]);
 
-  const [selectedMission, setSelectedMission] = useState<string>("all");
-  const [selectedImpact, setSelectedImpact] = useState<string>("all");
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
-  // Mock data for demonstration
-  const publications = [
-    {
-      id: "1",
-      title: "Effects of Microgravity on Plant Cell Wall Development",
-      summary: "This study investigates how microgravity conditions affect the formation and structure of plant cell walls during early growth stages. Results indicate significant alterations in cellulose synthesis and wall thickness.",
-      year: 2023,
-      authors: ["Smith, J.", "Johnson, M.", "Williams, K."],
-      tags: ["Flora & Fauna", "Microgravity", "Cell Biology"],
-      source: "NASA OSDR",
-      mission: "ISS",
-      impact: "Moon"
-    },
-    {
-      id: "2",
-      title: "Machine Learning Models for Predicting Astronaut Health Outcomes",
-      summary: "Development of AI models to predict health risks for astronauts during long-duration missions based on biological markers and environmental data from ISS experiments.",
-      year: 2024,
-      authors: ["Chen, L.", "Rodriguez, A."],
-      tags: ["AI & Machine Learning", "Health", "ISS"],
-      source: "NASA Task Book",
-      mission: "ISS",
-      impact: "Mars"
-    },
-    {
-      id: "3",
-      title: "Radiation Effects on Caenorhabditis elegans Reproduction",
-      summary: "Long-term study examining the impact of space radiation on the reproductive cycle of C. elegans, a model organism. Findings show adaptive responses to radiation stress.",
-      year: 2022,
-      authors: ["Brown, T.", "Davis, R.", "Martinez, E.", "Lee, S."],
-      tags: ["Flora & Fauna", "Radiation", "Genetics"],
-      source: "Life Sciences Library",
-      mission: "ISS",
-      impact: "Mars"
-    },
-    {
-      id: "4",
-      title: "Database Architecture for Bioscience Data Integration",
-      summary: "Comprehensive framework for integrating diverse bioscience datasets from multiple NASA missions and ground-based experiments into a unified knowledge system.",
-      year: 2023,
-      authors: ["Anderson, P.", "White, J."],
-      tags: ["Data Management", "Software", "Integration"],
-      source: "NASA OSDR",
-      mission: "Shuttle",
-      impact: "Earth"
-    },
-    {
-      id: "5",
-      title: "Educational Outreach: Bringing Space Biology to Classrooms",
-      summary: "Analysis of educational programs that use NASA space biology research to enhance STEM education in K-12 schools across the United States.",
-      year: 2024,
-      authors: ["Taylor, M."],
-      tags: ["Education", "Outreach"],
-      source: "Life Sciences Library",
-      mission: "Apollo",
-      impact: "Earth"
-    },
-    {
-      id: "6",
-      title: "Automated Image Analysis Tools for Cell Culture Studies",
-      summary: "Development of computer vision and machine learning tools for automated analysis of cell cultures in microgravity experiments, reducing manual analysis time by 80%.",
-      year: 2023,
-      authors: ["Zhang, H.", "Kumar, R.", "O'Brien, K."],
-      tags: ["AI & Machine Learning", "Software", "Imaging"],
-      source: "NASA Task Book",
-      mission: "ISS",
-      impact: "Moon"
-    }
-  ];
+  useEffect(() => setPage(1), [subject, mission, impact, year, sort]);
 
-  // Filter publications based on all criteria
-  const filteredPublications = publications.filter(pub => {
-    const subjectMatch = selectedSubject === "all" || pub.tags.some(tag => tag.includes(selectedSubject));
-    const missionMatch = selectedMission === "all" || pub.mission === selectedMission;
-    const impactMatch = selectedImpact === "all" || pub.impact === selectedImpact;
-    return subjectMatch && missionMatch && impactMatch;
+  const { data, isLoading, isError } = usePublications({
+    search,
+    subject,
+    mission,
+    impact,
+    year,
+    sort,
+    page,
+    pageSize: PAGE_SIZE,
   });
+
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const years = useMemo(() => {
+    const now = new Date().getFullYear();
+    return Array.from({ length: 12 }, (_, i) => String(now - i));
+  }, []);
+
+  const activeFilters = [subject, mission, impact, year].filter((v) => v !== "all");
 
   return (
     <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Explore Publications</h1>
+          <h1 className="mb-3 text-4xl font-bold">Explore Publications</h1>
           <p className="text-muted-foreground">
-            Search and filter through 608 NASA bioscience publications with AI-powered insights
+            Live from NASA's Space Biology publication list and the Open Science Data Repository —
+            refreshed automatically every day.
           </p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="glass-card p-6 mb-8">
+        <div className="glass-card mb-8 p-6">
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              <div className="md:col-span-12">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    placeholder="Search by title, keywords, or topics..." 
-                    className="pl-10"
-                  />
-                </div>
-              </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search titles and abstracts: bone loss, Arabidopsis, radiation..."
+                className="pl-10"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
             </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-              <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-6">
+              <Select value={subject} onValueChange={setSubject}>
                 <SelectTrigger>
                   <SelectValue placeholder="Subject" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover z-50">
+                <SelectContent className="z-50 bg-popover">
                   <SelectItem value="all">All Subjects</SelectItem>
-                  <SelectItem value="AI & Machine Learning">AI & ML</SelectItem>
-                  <SelectItem value="Flora & Fauna">Flora & Fauna</SelectItem>
-                  <SelectItem value="Data Management">Data Mgmt</SelectItem>
-                  <SelectItem value="Education">Education</SelectItem>
-                  <SelectItem value="Software">Software</SelectItem>
+                  {SUBJECTS.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
-              <Select value={selectedMission} onValueChange={setSelectedMission}>
+              <Select value={mission} onValueChange={setMission}>
                 <SelectTrigger>
                   <SelectValue placeholder="Mission" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover z-50">
+                <SelectContent className="z-50 bg-popover">
                   <SelectItem value="all">All Missions</SelectItem>
-                  <SelectItem value="ISS">ISS</SelectItem>
-                  <SelectItem value="Shuttle">Shuttle</SelectItem>
-                  <SelectItem value="Apollo">Apollo</SelectItem>
+                  {MISSIONS.map((m) => (
+                    <SelectItem key={m} value={m}>
+                      {m}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
-              <Select value={selectedImpact} onValueChange={setSelectedImpact}>
+              <Select value={impact} onValueChange={setImpact}>
                 <SelectTrigger>
                   <SelectValue placeholder="Impact" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover z-50">
+                <SelectContent className="z-50 bg-popover">
                   <SelectItem value="all">All Impact</SelectItem>
-                  <SelectItem value="Moon">Moon Ready</SelectItem>
-                  <SelectItem value="Mars">Mars Ready</SelectItem>
-                  <SelectItem value="Earth">Earth Benefit</SelectItem>
+                  {IMPACTS.map((i) => (
+                    <SelectItem key={i} value={i}>
+                      {i} focus
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
-              <Select defaultValue="all">
+              <Select value={year} onValueChange={setYear}>
                 <SelectTrigger>
                   <SelectValue placeholder="Year" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover z-50">
+                <SelectContent className="z-50 max-h-72 bg-popover">
                   <SelectItem value="all">All Years</SelectItem>
-                  <SelectItem value="2024">2024</SelectItem>
-                  <SelectItem value="2023">2023</SelectItem>
-                  <SelectItem value="2022">2022</SelectItem>
-                  <SelectItem value="older">Older</SelectItem>
+                  {years.map((y) => (
+                    <SelectItem key={y} value={y}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="older">Before 2015</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <div className="col-span-2 flex gap-2">
-                <Button 
+                <Button
                   variant={viewMode === "grid" ? "default" : "outline"}
                   size="icon"
                   onClick={() => setViewMode("grid")}
                   className="flex-1"
+                  aria-label="Grid view"
                 >
                   <Grid3x3 className="h-4 w-4" />
                 </Button>
-                <Button 
+                <Button
                   variant={viewMode === "graph" ? "default" : "outline"}
                   size="icon"
                   onClick={() => setViewMode("graph")}
                   className="flex-1"
+                  aria-label="Graph view"
                 >
                   <Network className="h-4 w-4" />
                 </Button>
               </div>
             </div>
+
+            {activeFilters.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2">
+                {activeFilters.map((f) => (
+                  <Badge key={f} variant="secondary">
+                    {f}
+                  </Badge>
+                ))}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSubject("all");
+                    setMission("all");
+                    setImpact("all");
+                    setYear("all");
+                  }}
+                >
+                  Clear filters
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Results */}
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">
-            Showing {filteredPublications.length} of 608 publications
+            {isLoading ? "Searching..." : `${total.toLocaleString()} publications found`}
           </p>
-          <Select defaultValue="relevance">
-            <SelectTrigger className="w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="relevance">Most Relevant</SelectItem>
-              <SelectItem value="recent">Most Recent</SelectItem>
-              <SelectItem value="cited">Most Cited</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-2">
+            <Link to={`/ask${search ? `?q=${encodeURIComponent(search)}` : ""}`}>
+              <Button variant="outline" size="sm">
+                <Sparkles className="mr-2 h-4 w-4" /> Ask the research
+              </Button>
+            </Link>
+            <Select value={sort} onValueChange={(v) => setSort(v as typeof sort)}>
+              <SelectTrigger className="w-[170px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="z-50 bg-popover">
+                <SelectItem value="recent">Newest first</SelectItem>
+                <SelectItem value="oldest">Oldest first</SelectItem>
+                <SelectItem value="title">Title A–Z</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        {viewMode === "grid" ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredPublications.map((pub) => (
-              <PublicationCard key={pub.id} {...pub} />
-            ))}
-          </div>
-        ) : (
+        {viewMode === "graph" ? (
           <div>
             <KnowledgeGraph />
             <div className="mt-6 flex justify-center">
               <Button onClick={() => setViewMode("grid")} variant="outline">
-                Return to Grid View
+                Return to grid view
               </Button>
             </div>
           </div>
+        ) : isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : isError ? (
+          <p className="py-20 text-center text-muted-foreground">
+            The publication library could not be loaded. Please refresh the page.
+          </p>
+        ) : total === 0 ? (
+          <p className="py-20 text-center text-muted-foreground">
+            No publications matched that search. Try a broader term.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {data!.rows.map((pub) => (
+              <PublicationCard
+                key={pub.id}
+                id={pub.id}
+                title={pub.title}
+                summary={pub.abstract ?? "Abstract not available for this record."}
+                year={pub.year ?? 0}
+                authors={pub.authors}
+                tags={pub.tags}
+                source={pub.source}
+              />
+            ))}
+          </div>
         )}
 
-        {/* Pagination */}
-        <div className="flex justify-center items-center gap-2 mt-8">
-          <Button variant="outline" disabled>Previous</Button>
-          <Button variant="default">1</Button>
-          <Button variant="outline">2</Button>
-          <Button variant="outline">3</Button>
-          <Button variant="outline">Next</Button>
-        </div>
+        {viewMode === "grid" && totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-2">
+            <Button variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>
+              Previous
+            </Button>
+            <span className="px-3 text-sm text-muted-foreground">
+              Page {page} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              disabled={page >= totalPages}
+              onClick={() => setPage(page + 1)}
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
