@@ -8,6 +8,8 @@ import {
   Users,
   Sprout,
   Loader2,
+  Copy,
+  FileText,
 } from "lucide-react";
 import AdviceOutput from "@/components/AdviceOutput";
 import DownloadReportButton from "@/components/DownloadReportButton";
@@ -41,9 +43,7 @@ const PublicationDetail = () => {
 
   const exportCitation = () => {
     if (!publication) return;
-    const authors = publication.authors?.join(", ") || "NASA Space Biology";
-    const citation = `${authors} (${publication.year ?? "n.d."}). ${publication.title}. ${publication.source}. ${publication.source_url ?? ""}`.trim();
-    navigator.clipboard.writeText(citation);
+    navigator.clipboard.writeText(citationFor(publication));
     toast.success("Citation copied to your clipboard");
   };
 
@@ -187,6 +187,31 @@ const PublicationDetail = () => {
                 </ul>
               </Card>
             )}
+
+            <Card className="glass-card p-6">
+              <h2 className="mb-2 text-2xl font-semibold">Official reports and PDFs</h2>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Published documents from NASA and the journals themselves — nothing written by this
+                site.
+              </p>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                {officialDocuments(publication).map((doc) => (
+                  <a
+                    key={doc.url + doc.label}
+                    href={doc.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-start gap-3 rounded-lg border border-border bg-secondary/40 p-4 transition-colors hover:bg-secondary"
+                  >
+                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>
+                      <span className="block font-medium">{doc.label}</span>
+                      <span className="block text-xs text-muted-foreground">{doc.detail}</span>
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="impact" className="space-y-6">
