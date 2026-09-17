@@ -15,6 +15,7 @@ import PublicationCard from "@/components/PublicationCard";
 import KnowledgeGraph from "@/components/KnowledgeGraph";
 import AskDialog from "@/components/AskDialog";
 import { usePublications } from "@/hooks/usePublications";
+import { officialDocuments, primarySourceUrl } from "@/lib/sources";
 
 const SUBJECTS = [
   "Flora & Fauna",
@@ -232,7 +233,13 @@ const Explore = () => {
 
         {viewMode === "graph" ? (
           <div>
-            <KnowledgeGraph />
+            <KnowledgeGraph
+              studies={data?.rows ?? []}
+              isLoading={isLoading}
+              title="Knowledge graph of these results"
+              description="Built from the studies matching your filters. Click any circle to see the paper, its citation and the shared organism, mission or subject that connects it."
+            />
+
             <div className="mt-6 flex justify-center">
               <Button onClick={() => setViewMode("grid")} variant="outline">
                 Return to grid view
@@ -263,6 +270,8 @@ const Explore = () => {
                 authors={pub.authors}
                 tags={pub.tags}
                 source={pub.source}
+                sourceUrl={primarySourceUrl(pub)}
+                pdfUrl={officialDocuments(pub).find((d) => d.kind === "pdf")?.url}
               />
             ))}
           </div>

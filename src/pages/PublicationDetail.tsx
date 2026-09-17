@@ -8,6 +8,8 @@ import {
   Users,
   Sprout,
   Loader2,
+  Copy,
+  FileText,
 } from "lucide-react";
 import AdviceOutput from "@/components/AdviceOutput";
 import DownloadReportButton from "@/components/DownloadReportButton";
@@ -19,6 +21,7 @@ import { Card } from "@/components/ui/card";
 import KnowledgeGraph from "@/components/KnowledgeGraph";
 import { toast } from "sonner";
 import { usePublication, usePublications } from "@/hooks/usePublications";
+import { citationFor, officialDocuments, primarySourceUrl } from "@/lib/sources";
 
 const PublicationDetail = () => {
   const { id } = useParams();
@@ -40,9 +43,7 @@ const PublicationDetail = () => {
 
   const exportCitation = () => {
     if (!publication) return;
-    const authors = publication.authors?.join(", ") || "NASA Space Biology";
-    const citation = `${authors} (${publication.year ?? "n.d."}). ${publication.title}. ${publication.source}. ${publication.source_url ?? ""}`.trim();
-    navigator.clipboard.writeText(citation);
+    navigator.clipboard.writeText(citationFor(publication));
     toast.success("Citation copied to your clipboard");
   };
 
@@ -129,32 +130,30 @@ const PublicationDetail = () => {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            {publication.source_url && (
-              <a href={publication.source_url} target="_blank" rel="noreferrer">
+            {primarySourceUrl(publication) && (
+              <a href={primarySourceUrl(publication)} target="_blank" rel="noreferrer">
                 <Button className="cosmic-glow">
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Read the full study
                 </Button>
               </a>
             )}
+            {officialDocuments(publication).find((d) => d.kind === "pdf") && (
+              <a
+                href={officialDocuments(publication).find((d) => d.kind === "pdf")!.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Button variant="outline">
+                  <Download className="mr-2 h-4 w-4" />
+                  Official PDF
+                </Button>
+              </a>
+            )}
             <Button variant="outline" onClick={exportCitation}>
-              <Download className="mr-2 h-4 w-4" />
+              <Copy className="mr-2 h-4 w-4" />
               Copy citation
             </Button>
-            <DownloadReportButton
-              label="Download summary PDF"
-              kicker={publication.source}
-              title={publication.title}
-              fileName={`study-${publication.external_id}`}
-              facts={[
-                { label: "Year", value: String(publication.year ?? "Unknown") },
-                { label: "Subject", value: publication.subject ?? "Unclassified" },
-                { label: "Mission", value: publication.mission ?? "Not stated" },
-              ]}
-              body={`${publication.abstract ?? "No abstract available."}\n\n${findings
-                .map((f) => `- ${f}`)
-                .join("\n")}`}
-            />
           </div>
         </div>
 
@@ -188,6 +187,31 @@ const PublicationDetail = () => {
                 </ul>
               </Card>
             )}
+
+            <Card className="glass-card p-6">
+              <h2 className="mb-2 text-2xl font-semibold">Official reports and PDFs</h2>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Published documents from NASA and the journals themselves — nothing written by this
+                site.
+              </p>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                {officialDocuments(publication).map((doc) => (
+                  <a
+                    key={doc.url + doc.label}
+                    href={doc.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-start gap-3 rounded-lg border border-border bg-secondary/40 p-4 transition-colors hover:bg-secondary"
+                  >
+                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>
+                      <span className="block font-medium">{doc.label}</span>
+                      <span className="block text-xs text-muted-foreground">{doc.detail}</span>
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="impact" className="space-y-6">
@@ -218,7 +242,12 @@ const PublicationDetail = () => {
           </TabsContent>
 
           <TabsContent value="related" className="space-y-6">
-            <KnowledgeGraph />
+            <KnowledgeGraph
+              focus={publication}
+              studies={related}
+              title="How this study connects"
+              description="The orange circle is this study. Click any other circle for the paper, its citation or the theme that links them."
+            />
 
             <Card className="glass-card p-6">
               <h2 className="mb-4 text-2xl font-semibold">Related Publications</h2>
